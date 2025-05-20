@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="EzyTaskin" nsURI="http://ezy.trungnt2910.com/schemas" nsPrefix="ezy">
+  <eClassifiers xsi:type="ecore:EDataType" name="bool" instanceClassName="java.lang.Boolean"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="decimal" instanceClassName="java.lang.Double"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="int" instanceClassName="java.lang.Integer"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="string" instanceClassName="java.lang.String"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="DateTime" instanceClassName="java.time.ZonedDateTime"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Guid" instanceClassName="java.util.UUID"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Account">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//Guid"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" lowerBound="1" eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="passwordSaltHash" lowerBound="1"
+        eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="creationDate" lowerBound="1"
+        eType="#//DateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="phoneNumber" eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address" eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="provider" eType="#//Provider"
+        eOpposite="#//Provider/account"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="consumer" eType="#//Consumer"
+        eOpposite="#//Consumer/account"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="paymentMethods" ordered="false"
+        upperBound="-1" eType="#//PaymentMethod" eOpposite="#//PaymentMethod/account">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Provider">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//Guid"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="account" lowerBound="1"
+        eType="#//Account" eOpposite="#//Account/provider"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalRating" lowerBound="1"
+        eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reviewCount" lowerBound="1"
+        eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPremium" lowerBound="1"
+        eType="#//bool"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSubscriptionActive" lowerBound="1"
+        eType="#//bool"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subscriptionDate" eType="#//DateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categories" ordered="false"
+        upperBound="-1" eType="#//ProviderCategory" eOpposite="#//ProviderCategory/provider">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Consumer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//Guid"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="account" lowerBound="1"
+        eType="#//Account" eOpposite="#//Account/consumer"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="requestsPosted" lowerBound="1"
+        eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="requestsCompleted" lowerBound="1"
+        eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requests" ordered="false"
+        upperBound="-1" eType="#//Request" eOpposite="#//Request/consumer">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Request">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//Guid"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="consumer" lowerBound="1"
+        eType="#//Consumer" eOpposite="#//Consumer/requests"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selected" eType="#//Offer"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" lowerBound="1"
+        eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" lowerBound="1"
+        eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="budget" lowerBound="1"
+        eType="#//decimal"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dueDate" eType="#//DateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="remoteEligible" lowerBound="1"
+        eType="#//bool"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="completedDate" eType="#//DateTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offers" ordered="false"
+        upperBound="-1" eType="#//Offer" eOpposite="#//Offer/request">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categories" ordered="false"
+        upperBound="-1" eType="#//RequestCategory" eOpposite="#//RequestCategory/request">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="review" eType="#//Review"
+        eOpposite="#//Review/request"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Offer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//Guid"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="provider" lowerBound="1"
+        eType="#//Provider"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="request" lowerBound="1"
+        eType="#//Request" eOpposite="#//Request/offers"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="price" eType="#//decimal"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Review">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//Guid"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="request" lowerBound="1"
+        eType="#//Request" eOpposite="#//Request/review"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rating" lowerBound="1"
+        eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="#//string"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Category">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//Guid"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="#//string"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="providers" ordered="false"
+        upperBound="-1" eType="#//ProviderCategory" eOpposite="#//ProviderCategory/category">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requests" ordered="false"
+        upperBound="-1" eType="#//RequestCategory" eOpposite="#//RequestCategory/category">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProviderCategory">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="provider" lowerBound="1"
+        eType="#//Provider" eOpposite="#//Provider/categories"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" lowerBound="1"
+        eType="#//Category" eOpposite="#//Category/providers"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RequestCategory">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="request" lowerBound="1"
+        eType="#//Request" eOpposite="#//Request/categories"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" lowerBound="1"
+        eType="#//Category" eOpposite="#//Category/requests"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PaymentMethod">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//Guid"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="account" lowerBound="1"
+        eType="#//Account" eOpposite="#//Account/paymentMethods"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//string"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProfileController">
+    <eOperations name="ActivatePremium">
+      <eParameters name="provider" lowerBound="1" eType="#//Provider"/>
+      <eParameters name="paymentMethod" lowerBound="1" eType="#//PaymentMethod"/>
+    </eOperations>
+    <eOperations name="DeactivatePremium">
+      <eParameters name="provider" lowerBound="1" eType="#//Provider"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Providers" ordered="false"
+        upperBound="-1" eType="#//Provider">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RequestController">
+    <eOperations name="CompleteRequest">
+      <eParameters name="request" lowerBound="1" eType="#//Request"/>
+    </eOperations>
+    <eOperations name="SelectOffer">
+      <eParameters name="request" lowerBound="1" eType="#//Request"/>
+      <eParameters name="offer" lowerBound="1" eType="#//Offer"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Requests" ordered="false"
+        upperBound="-1" eType="#//Request">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Offers" ordered="false"
+        upperBound="-1" eType="#//Offer">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReviewController">
+    <eOperations name="AddReview">
+      <eParameters name="request" lowerBound="1" eType="#//Request"/>
+      <eParameters name="rating" lowerBound="1" eType="#//int"/>
+      <eParameters name="description" eType="#//string"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Reviews" ordered="false"
+        upperBound="-1" eType="#//Review">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CategoryService">
+    <eOperations name="GetCategoriesFor" ordered="false" upperBound="-1" eType="#//Category">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+      <eParameters name="names" ordered="false" upperBound="-1" eType="#//string">
+        <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+          <details key="nullFree" value="false"/>
+        </eAnnotations>
+      </eParameters>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Categories" ordered="false"
+        upperBound="-1" eType="#//Category">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+</ecore:EPackage>

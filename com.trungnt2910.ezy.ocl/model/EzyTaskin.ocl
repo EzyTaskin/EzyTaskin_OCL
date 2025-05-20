@@ -1,0 +1,120 @@
+import 'platform:/resource/com.trungnt2910.ezy.ocl/model/EzyTaskin.ecore'
+
+package EzyTaskin
+
+--- Invariants
+
+context Account
+inv UniqueEmail:
+	Account.allInstances()->isUnique(email)
+
+context Provider
+inv NonNegativeTotalRating:
+	self.totalRating >= 0
+
+context Provider
+inv NonNegativeReviewCount:
+	self.reviewCount >= 0
+
+context Provider
+inv UniqueCategories:
+	self.categories->isUnique(category.name)
+
+context Provider
+inv ActiveSubscriptionMustBePremium:
+	self.isPremium or
+		(not self.isPremium and not self.isSubscriptionActive)
+
+context Provider
+inv ActiveSubscriptionMustHaveDate:
+	not self.isSubscriptionActive or
+		self.subscriptionDate->size() = 1
+
+context Consumer
+inv NonNegativeRequestsPosted:
+	self.requestsPosted >= 0
+
+context Consumer
+inv NonNegativeRequestsCompleted:
+	self.requestsCompleted >= 0
+
+context Consumer
+inv RequestsPostedAtLeastEqualsCompleted:
+	self.requestsPosted >= self.requestsCompleted
+
+context Consumer
+inv RequestsPostedEqualsCollection:
+	self.requestsPosted = self.requests->size()
+
+context Consumer
+inv RequestsCompletedEqualsCollection:
+	self.requestsCompleted =
+		self.requests->select(completedDate <> null)->size()
+
+context Request
+inv UniqueCategories:
+	self.categories->isUnique(category.name)
+
+context Request
+inv ValidSelectedOffer:
+	self.selected = null or
+		self.offers->includes(self.selected)
+
+context Offer
+inv ValidPrice:
+	self.price = null or
+		self.price <= self.request.budget
+
+context Review
+inv ValidRating:
+	self.rating >= 1 and self.rating <= 5
+
+--- Conditions
+
+context ProfileController::ActivatePremium(
+	provider: Provider, paymentMethod: PaymentMethod
+):
+pre ValidPaymentMethod:
+	provider.account.paymentMethods->includes(paymentMethod)
+
+context ProfileController::ActivatePremium(
+	provider: Provider, paymentMethod: PaymentMethod
+):
+pre NotAlreadyActive:
+	provider.isSubscriptionActive = false
+
+context ProfileController::DeactivatePremium(
+	provider: Provider
+):
+pre AlreadyActive:
+	provider.isSubscriptionActive = true
+
+context RequestController::CompleteRequest(request: Request):
+pre RequestHasSelectedOffer:
+	request.selected <> null
+
+context RequestController::SelectOffer(
+	request: Request, offer: Offer
+):
+pre ValidOffer:
+	request.offers->includes(offer)
+post OfferSelected:
+	request.selected = offer
+
+context ReviewController::AddReview(
+	request: Request, rating: int, description: string[?]
+):
+pre RequestCompleted:
+	request.completedDate <> null
+
+context ReviewController::AddReview(
+	request: Request, rating: int, description: string[?]
+):
+pre ValidRating:
+	rating >= 1 and rating <= 5
+
+context CategoryService::GetCategoriesFor(name: string[*]): Category[*]
+post UniqueCategoryNames:
+	result->isUnique(name)
+
+endpackage
